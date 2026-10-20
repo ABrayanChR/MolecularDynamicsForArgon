@@ -1,89 +1,89 @@
-# Dinámica molecular 3D con potencial de Lennard-Jones (MATLAB)
+# 3D Molecular Dynamics with Lennard-Jones Potential (MATLAB)
 
-Simulación de dinámica molecular de un sistema de partículas tipo argón en
-una caja cúbica con condiciones periódicas de contorno. Las partículas
-interactúan mediante el potencial de Lennard-Jones y las ecuaciones se
-resuelven en **unidades reducidas** (adimensionales).
+Molecular dynamics simulation of a system of argon-like particles in a cubic
+box with periodic boundary conditions. The particles interact through the
+Lennard-Jones potential, and the equations are solved in **reduced units**
+(dimensionless).
 
-El script calcula la evolución temporal de las energías, la temperatura, la
-velocidad del centro de masas y la presión, y estima el error estadístico de
-cada magnitud con un **análisis por bloques**.
+The script computes the time evolution of the energies, temperature, center of
+mass velocity and pressure, and estimates the statistical error of each
+quantity with a **block analysis**.
 
-## Modelo físico
+## Physical model
 
-Potencial de Lennard-Jones entre cada par de partículas:
+Lennard-Jones potential between each pair of particles:
 
     U(r) = 4ε · [ (σ/r)¹² − (σ/r)⁶ ]
 
-Parámetros del sistema (argón):
+System parameters (argon):
 
-| Magnitud | Valor |
+| Quantity | Value |
 |---|---|
-| Masa molar `A` | 0.039948 kg/mol |
-| Densidad | 1680 kg/m³ |
-| Temperatura `To` | 120 K |
+| Molar mass `A` | 0.039948 kg/mol |
+| Density | 1680 kg/m³ |
+| Temperature `To` | 120 K |
 | `σ` | 3.4·10⁻¹⁰ m |
 | `ε` | `k_B · To` |
 
-Adimensionalización: longitudes en unidades de `σ`, energías en `ε` y tiempo
-en `σ·√(m/ε)`. Con ello, la caja tiene lado `La = L/σ` y el paso temporal
-reducido es `dta = dt·√(ε/(m·σ²))`.
+Non-dimensionalization: lengths in units of `σ`, energies in `ε` and time in
+`σ·√(m/ε)`. The box then has side `La = L/σ` and the reduced time step is
+`dta = dt·√(ε/(m·σ²))`.
 
-## Qué hace
+## What it does
 
-- **Condiciones periódicas:** convención de la imagen mínima para calcular la
-  distancia entre cada par de partículas, con radio de corte `rc = La/2`.
-- **Cálculo de fuerzas** entre todos los pares de partículas.
-- **Integración temporal** explícita de posiciones y velocidades.
-- **Medidas** en cada paso:
-  - Energía cinética, potencial y total
-  - Temperatura
-  - Velocidad del centro de masas
-  - Presión
-- **Reanudación:** el estado se guarda en `simulation.mat` en cada paso y se
-  puede retomar desde el menú inicial.
-- **Visualización** configurable (menú): imágenes 3D de las partículas,
-  gráficas de las magnitudes, ambas o ninguna.
-- **Análisis por bloques** (`analisisPorBloques`): estima la varianza de cada
-  magnitud para distintos tamaños de bloque (potencias de 2) y la representa
-  en escala logarítmica.
+- **Periodic boundary conditions:** minimum image convention to compute the
+  distance between each pair of particles, with cutoff radius `rc = La/2`.
+- **Force computation** between all pairs of particles.
+- **Explicit time integration** of positions and velocities.
+- **Measurements** at every step:
+  - Kinetic, potential and total energy
+  - Temperature
+  - Center of mass velocity
+  - Pressure
+- **Resuming:** the state is saved to `simulation.mat` at every step and can be
+  resumed from the initial menu.
+- **Configurable visualization** (menu): 3D images of the particles, plots of
+  the measured quantities, both, or none.
+- **Block analysis** (`analisisPorBloques`): estimates the variance of each
+  quantity for different block sizes (powers of 2) and plots it on a
+  logarithmic scale.
 
-## Uso
+## Usage
 
-1. Abre MATLAB y sitúate en la carpeta del proyecto.
-2. Ejecuta `dinamicamolecular1`.
-3. Elige el modo:
-   - **Nueva simulación:** crea el sistema desde cero.
-   - **Retomar simulación existente:** continúa desde `simulation.mat`.
-4. Elige el tipo de visualización.
+1. Open MATLAB and move to the project folder.
+2. Run `dinamicamolecular1`.
+3. Choose the mode:
+   - **New simulation:** creates the system from scratch.
+   - **Resume existing simulation:** continues from `simulation.mat`.
+4. Choose the visualization type.
 
-Cada ejecución avanza `niter = 101` pasos de tiempo. Para simulaciones más
-largas, vuelve a ejecutar el script en modo *Retomar*.
+Each run advances `niter = 101` time steps. For longer simulations, run the
+script again in *Resume* mode.
 
-### Parámetros principales
+### Main parameters
 
-Se editan al inicio del script:
+Edit them at the top of the script:
 
-| Variable | Valor por defecto | Significado |
+| Variable | Default | Meaning |
 |---|---|---|
-| `n` | 85 | Número de puntos por arista de la malla inicial |
-| `dens` | 1680 | Densidad (kg/m³) |
-| `To` | 120 | Temperatura (K) |
-| `dt` | 1e-14 | Paso temporal (s) |
-| `niter` | 101 | Pasos por ejecución |
-| `s` (σ) | 3.4e-10 | Parámetro de longitud de Lennard-Jones (m) |
+| `n` | 85 | Number of points per edge of the initial grid |
+| `dens` | 1680 | Density (kg/m³) |
+| `To` | 120 | Temperature (K) |
+| `dt` | 1e-14 | Time step (s) |
+| `niter` | 101 | Steps per run |
+| `s` (σ) | 3.4e-10 | Lennard-Jones length parameter (m) |
 
-## Archivos generados
+## Generated files
 
-| Archivo | Contenido |
+| File | Contents |
 |---|---|
-| `simulation.mat` | Estado de la simulación (posiciones, velocidades, medidas) |
-| `posicioninicial.png` | Posiciones iniciales de las partículas |
-| `posiciont=<t>.png` | Instantáneas de las posiciones cada 250 pasos |
-| `Fotos/varianza_<magnitud>.png` | Gráficas del análisis por bloques |
+| `simulation.mat` | Simulation state (positions, velocities, measurements) |
+| `posicioninicial.png` | Initial positions of the particles |
+| `posiciont=<t>.png` | Snapshots of the positions every 250 steps |
+| `Fotos/varianza_<quantity>.png` | Block analysis plots |
 
-El análisis por bloques también imprime en la consola tablas con la varianza y
-la desviación estándar para cada tamaño de bloque.
+The block analysis also prints tables in the console with the variance and the
+standard deviation for each block size.
 
 <img width="425" height="750" alt="medidas1cort" src="https://github.com/user-attachments/assets/89df8ebe-c772-4468-9fec-b324d89ed2ec" />
 
@@ -94,6 +94,6 @@ la desviación estándar para cada tamaño de bloque.
 <img width="425" height="300" alt="posiciont=4500" src="https://github.com/user-attachments/assets/b7f27e57-faf7-46cc-bedf-f75b3739a7b0" />
 
 
-## Requisitos
+## Requirements
 
-- MATLAB R2017b o superior
+- MATLAB R2017b or later
